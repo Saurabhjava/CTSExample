@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,8 +25,8 @@ public class MyUserDetailService implements UserDetailsService {
 		Optional<MyUser> op=uRepo.findById(username);
 		if(op.isPresent()) {
 			MyUser u=op.get();
-			System.out.println(u.getUserName()+"\t"+u.getPassword());
-			return new User(u.getUserName(),u.getPassword(), new ArrayList<>());
+			//System.out.println(u.getUserName()+"\t"+u.getPassword()+"\t"+u.getRole());
+			return new User(u.getUserName(),u.getPassword(), AuthorityUtils.createAuthorityList(u.getRole()));
 		}
 		else {
 			throw new UsernameNotFoundException("User Not Available with UserName:"+username);
